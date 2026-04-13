@@ -18,6 +18,7 @@ import codecs
 
 from ._stream_info import StreamInfo
 from ._uri_utils import parse_data_uri, file_uri_to_path
+from ._hwp_converter import convert_hwp_to_hwpx
 
 from .converters import (
     PlainTextConverter,
@@ -39,6 +40,7 @@ from .converters import (
     EpubConverter,
     DocumentIntelligenceConverter,
     CsvConverter,
+    HwpxConverter,
 )
 
 from ._base_converter import DocumentConverter, DocumentConverterResult
@@ -202,6 +204,7 @@ class MarkItDown:
             self.register_converter(OutlookMsgConverter())
             self.register_converter(EpubConverter())
             self.register_converter(CsvConverter())
+            self.register_converter(HwpxConverter())
 
             # Register Document Intelligence converter at the top of the stack if endpoint is provided
             docintel_endpoint = kwargs.get("docintel_endpoint")
@@ -310,6 +313,17 @@ class MarkItDown:
     ) -> DocumentConverterResult:
         if isinstance(path, Path):
             path = str(path)
+
+        lower_extension = os.path.splitext(path)[1].lower()
+        if lower_extension == ".hwp":
+            converted_hwpx_path = convert_hwp_to_hwpx(path)
+            return self.convert_local(
+                converted_hwpx_path,
+                stream_info=stream_info,
+                file_extension=".hwpx",
+                url=url,
+                **kwargs,
+            )
 
         # Build a base StreamInfo object from which to start guesses
         base_guess = StreamInfo(
