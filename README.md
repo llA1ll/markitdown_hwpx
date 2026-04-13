@@ -1,3 +1,11 @@
+한글 지원을 위해서 hwpx를 처리하도록 이어 붙였습니다.
+hwp는 윈도환경에서 돌아가도록 했습니다.(hwp를 hwpx로 변환 후 처리, FilePathChekerModule.ll 필요)
+mcp에서 uri 한글 처리가 안되어 코드 수정했습니다.
+
+github는 써 본지 얼마안되어 익숙하지 않습니다.
+
+
+
 # MarkItDown
 
 [![PyPI](https://img.shields.io/pypi/v/markitdown.svg)](https://pypi.org/project/markitdown/)
