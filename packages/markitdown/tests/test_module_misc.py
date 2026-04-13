@@ -252,6 +252,25 @@ def test_file_uris() -> None:
     assert path == "/path/to/file.txt"
 
 
+def test_file_uri_roundtrip_with_unicode_filename(tmp_path) -> None:
+    local_path = (tmp_path / "테스트+문서.txt").resolve()
+    uri = local_path.as_uri()
+
+    netloc, path = file_uri_to_path(uri)
+
+    assert netloc is None
+    assert path == str(local_path)
+
+
+def test_convert_uri_with_unicode_filename(tmp_path) -> None:
+    local_path = tmp_path / "테스트+문서.txt"
+    local_path.write_text("Hello from unicode file URI", encoding="utf-8")
+
+    result = MarkItDown().convert(local_path.resolve().as_uri())
+
+    assert "Hello from unicode file URI" in result.text_content
+
+
 def test_docx_comments() -> None:
     # Test DOCX processing, with comments and setting style_map on init
     markitdown_with_style_map = MarkItDown(style_map="comment-reference => ")
